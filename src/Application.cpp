@@ -19,6 +19,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "tests/TestClearColor.h"
 #include "tests/TestTexture2D.h"
+#include "tests/TestBatchRender.h"
 int main(void)
 {
     GLFWwindow* window;
@@ -53,20 +54,12 @@ int main(void)
    std::cout << glGetString(GL_VERSION) << std::endl;
    //-----------------------------------------------------------------------------------------
    {
-       float triangle_vertices[] = {
-          0,0.5f,
-         -0.5f,0.0f,
-          0.5f,0.0f,
-         -0.5f,0.0f,
-          0.5f,0.0f,
-          0,-0.5f,
-       };
-       VertexBuffer vb1(triangle_vertices, 6 * 2 * sizeof(float));
        
        tests::Test* currentTest=nullptr;
        tests::TestMenu* testMenu = new tests::TestMenu(currentTest);
        testMenu->RegisterTest<tests::TestClearColor>("Clear tests");
        testMenu->RegisterTest<tests::TestTexture2D>("2D Texture");
+       testMenu->RegisterTest<tests::TestBatchRender>("BatchRender");
        currentTest = testMenu;
        
       

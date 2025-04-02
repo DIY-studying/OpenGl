@@ -17,10 +17,13 @@ private:
 public:
 	Shader(const std::string& filePath);
 	~Shader();
-	void SetUniformi1(const std::string& name,int i1);
-	void SetUniformf4(const std::string& name, float v1, float v2, float v3, float v4);
-	void SetUniformMatf4(const std::string& name,const glm::mat4& matrix);
-	
+	void SetUniformi1i(const std::string& name,int i1);
+	void SetUniform4f(const std::string& name, float v1, float v2, float v3, float v4);
+	void SetUniformMat4fv(const std::string& name,const glm::mat4& matrix);
+	void SetUniformMat4fv(const std::string& name,  float* mat, int count);
+	void SetUniformi1iv(const std::string& name,int count, int* value);
+
+
 	void Bind() const;
 	void UnBind() const;
 private:

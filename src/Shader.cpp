@@ -49,19 +49,30 @@ Shader::~Shader()
     glDeleteProgram(m_RenderID);
 }
 
-void Shader::SetUniformi1(const std::string& name, int value)
+void Shader::SetUniformi1i(const std::string& name, int value)
 {
     glUniform1i(GetLocation(name),value);
 }
+void Shader::SetUniformi1iv(const std::string& name, int count,int* value)
+{
+    glUniform1iv(GetLocation(name),count,value);
+}
 
-void Shader::SetUniformf4(const std::string& name,float v1,float v2,float v3,float v4)
+void Shader::SetUniform4f(const std::string& name,float v1,float v2,float v3,float v4)
 {
     glUniform4f(GetLocation(name), v1, v2, v3, v4);
 }
-void Shader::SetUniformMatf4(const std::string& name,const glm::mat4& mat)
+
+void Shader::SetUniformMat4fv(const std::string& name,const glm::mat4& mat)
 {
     glUniformMatrix4fv(GetLocation(name),1,GL_FALSE,&mat[0][0]);
 }
+
+void Shader::SetUniformMat4fv(const std::string& name,  float* mat, int count)
+{
+    glUniformMatrix4fv(GetLocation(name), count, GL_FALSE, mat);
+}
+
 int Shader::GetLocation(const std::string& name)
 {
     if (m_UniformLocatonCache.find(name) != m_UniformLocatonCache.end())

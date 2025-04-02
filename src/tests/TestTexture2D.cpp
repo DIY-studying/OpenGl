@@ -50,18 +50,18 @@ namespace tests
         m_Shader->Bind();
         {
             m_Texture->Bind(0);
-            m_Shader->SetUniformi1("ourTexture", 0);
+            m_Shader->SetUniformi1i("ourTexture", 0);
             glm::mat4 model = glm::translate(glm::mat4(1.0f), m_TranslationA);
             glm::mat4 mvp = m_Proj * m_View * model;
-            m_Shader->SetUniformMatf4("u_MVP", mvp);
+            m_Shader->SetUniformMat4fv("u_MVP", mvp);
             render.Draw(*m_VertexArray, *m_IndeiceBufer, *m_Shader);
         }
         {
             m_Texture->Bind(0);
-            m_Shader->SetUniformi1("ourTexture", 0);
+            m_Shader->SetUniformi1i("ourTexture", 0);
             glm::mat4 model = glm::translate(glm::mat4(1.0f), m_TranslationB);
             glm::mat4 mvp = m_Proj * m_View * model;
-            m_Shader->SetUniformMatf4("u_MVP", mvp);
+            m_Shader->SetUniformMat4fv("u_MVP", mvp);
             render.Draw(*m_VertexArray, *m_IndeiceBufer, *m_Shader);
         }
     }
