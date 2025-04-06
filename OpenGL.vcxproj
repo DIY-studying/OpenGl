@@ -169,11 +169,13 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\tests\TestTexture2D.cpp" />
     <ClCompile Include="src\tests\TestBatchRender.cpp" />
+    <ClCompile Include="src\tests\TestDynamicBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
     <None Include="res\shader\Basic.shader" />
     <None Include="res\shader\BatchRender.shader" />
+    <None Include="res\shader\DynamicBuffer.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />
@@ -624,6 +626,7 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\tests\TestTexture2D.h" />
     <ClInclude Include="src\tests\TestBatchRender.h" />
+    <ClInclude Include="src\tests\TestDynamicBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\texture\awesomeface.png" />

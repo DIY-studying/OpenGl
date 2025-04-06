@@ -68,25 +68,9 @@ namespace tests
             glm::mat4 modelB= glm::translate(glm::mat4(1.0f), m_TranslationB);
             glm::mat4 mvpA = m_Proj * m_View * modelA;
             glm::mat4 mvpB= m_Proj * m_View * modelB;
-            float mvp[4 * 4 * 2] ;
 
-            int index = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                for (int y = 0; y < 4; y++)
-                {
-                    mvp[index++] = mvpA[i][y];
-                }
-            }
-            for (int i = 0; i < 4; i++)
-            {
-                for (int y = 0; y < 4; y++)
-                {
-                    mvp[index++] = mvpB[i][y];
-                }
-            }
-            m_Shader->SetUniformMat4fv("u_MVP", mvp, 2);
-
+            m_Shader->SetUniformMat4fv("u_MVP[0]", mvpA);
+            m_Shader->SetUniformMat4fv("u_MVP[1]", mvpB);
 
             render.Draw(*m_VertexArray, *m_IndeiceBufer, *m_Shader);
         }

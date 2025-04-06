@@ -81,6 +81,9 @@
     <ClCompile Include="src\tests\TestBatchRender.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\tests\TestDynamicBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\Basic.shader" />
@@ -503,6 +506,7 @@
       <Filter>头文件</Filter>
     </None>
     <None Include="res\shader\BatchRender.shader" />
+    <None Include="res\shader\DynamicBuffer.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Render.h">
@@ -1430,6 +1434,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\tests\TestBatchRender.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tests\TestDynamicBuffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

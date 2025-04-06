@@ -20,6 +20,8 @@
 #include "tests/TestClearColor.h"
 #include "tests/TestTexture2D.h"
 #include "tests/TestBatchRender.h"
+#include "tests/TestDynamicBuffer.h"
+
 int main(void)
 {
     GLFWwindow* window;
@@ -60,6 +62,7 @@ int main(void)
        testMenu->RegisterTest<tests::TestClearColor>("Clear tests");
        testMenu->RegisterTest<tests::TestTexture2D>("2D Texture");
        testMenu->RegisterTest<tests::TestBatchRender>("BatchRender");
+       testMenu->RegisterTest<tests::TestDynamicBuffer>("Dynamic Buffer");
        currentTest = testMenu;
        
       
