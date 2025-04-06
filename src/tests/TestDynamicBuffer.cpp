@@ -1,48 +1,44 @@
 #include "TestDynamicBuffer.h"
 #include "TestTexture2D.h"
 #include "VertexBufferLayout.h"
-#include <array>
+#include <iostream>
 namespace tests
 {
-    static std::array<Vertex, 4> CreatQuad(float x,float y,float texID)
+    static Vertex* CreatQuad(Vertex* target,float x,float y,float texID)
     {
-        float size = 1.0f;
+        float size = 0.08f;
 
-        Vertex v0;
-        v0.position = Vec2{x,y};
-        v0.texcoord = Vec2{1.0f,0.0f};
-        v0.texID = texID;
+        target->position = {x,y};
+        target->texcoord = {0.0f,0.0f};
+        target->texID = texID;
+        target++;
 
-        Vertex v1;
-        v1.position = Vec2{ x-size,y };
-        v1.texcoord = Vec2{ 0.0f,0.0f };
-        v1.texID = texID;
+        target->position = { x+size,y };
+        target->texcoord = { 1.0f,0.0f };
+        target->texID = texID;
+        target++;
 
-        Vertex v2;
-        v2.position = Vec2{ x,y +size};
-        v2.texcoord = Vec2{ 1.0f,1.0f };
-        v2.texID = texID;
+        target->position = { x + size,y +size};
+        target->texcoord = { 1.0f,1.0f };
+        target->texID = texID;
+        target++;
 
-        Vertex v3;
-        v3.position = Vec2{ x-size,y +size};
-        v3.texcoord = Vec2{ 0.0f,1.0f };
-        v3.texID = texID;
+        target->position = { x,y +size};
+        target->texcoord = { 0.0f,1.0f };
+        target->texID = texID;
+        target++;
 
-        return {v0,v1,v2,v3};
+        return target;
     }
     TestDynamicBuffer::TestDynamicBuffer()
-        :posA{ 0.5 - 0.5 }, posB{ 0.5 - 0.5 }
+        :posA{ 0, 0 }, posB{ 0.5 ,- 0.5 },m_IndeiceBufer(nullptr)
     {
-        unsigned int indice[] =
-        {
-            0,1,2,2,1,3,
-            4,5,6,6,5,7
-        };  
-
-        m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * 100,GL_DYNAMIC_DRAW);
         
+        m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * MaxQuadCount*4, GL_DYNAMIC_DRAW);
+        m_IndeiceBufer = std::make_unique<IndeiceBufer>(nullptr, MaxQuadCount * 6, GL_DYNAMIC_DRAW);
+
+
         m_Shader = std::make_unique<Shader>("res/shader/DynamicBuffer.shader");
-        m_IndeiceBufer = std::make_unique<IndeiceBufer>(indice, 12);
         m_VertexArray = std::make_unique<VertexArray>();
         m_TextureA = std::make_unique<Texture>("res/texture/awesomeface.png");
         m_TextureB = std::make_unique<Texture>("res/texture/OIP-C.jpg");
@@ -53,31 +49,52 @@ namespace tests
         layout.Push<float>(1);
 
         m_VertexArray->AddBuffeer(*m_VertexBuffer, layout);
+
     }
 
 
 
     void TestDynamicBuffer::OnUpdate(float deltatime)
     {
-        float position[] =
+        unsigned int indice[MaxQuadCount * 6];
+        unsigned int offset = 0;
+        for (int i = 0; i < MaxQuadCount * 6; i += 6)
         {
-            //       vertex             texcoord         texture index
-                     0.5f,-0.5f,         1.0f,0.0f,                  0.0f,
-                     -0.5f,-0.5f,        0.0f,0.0f,                  0.0f,
-                     0.5f, 0.5f,         1.0f,1.0f,                  0.0f,
-                      -0.5f,0.5f,        0.0f,1.0f,                  0.0f,
+            indice[0 + i] = 0 + offset;
+            indice[1 + i] = 1 + offset;
+            indice[2 + i] = 2 + offset;
 
-                      0.5f,-0.5f,        1.0f,0.0f,                  1.0f,
-                     -0.5f,-0.5f,        0.0f,0.0f,                  1.0f,
-                     0.5f, 0.5f,         1.0f,1.0f,                  1.0f,
-                     -0.5f,0.5f,         0.0f,1.0f,                  1.0f,
-        };
-        auto q0 = CreatQuad(posA.x, posA.y, 0.0f);
-        auto q1 = CreatQuad(posB.x, posB.y, 1.0f);
-        memcpy(position, q0.data(), q0.size()*sizeof(Vertex));
-        memcpy(position + q0.size() *5, q1.data(), q1.size() * sizeof(Vertex));
+            indice[3 + i] = 2 + offset;
+            indice[4 + i] = 3 + offset;
+            indice[5 + i] = 0 + offset;
+
+            offset += 4;
+        }
+        
+        std::array<Vertex,50> vertexs;
+        Vertex* buffer = vertexs.data();
+        unsigned int indexCount = 0;
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                buffer = CreatQuad(buffer, x/5.0f+0.1f, y/5.0f+ 0.1f, (x + y) % 2);
+                indexCount++;
+            }
+        }
+        buffer = CreatQuad(buffer, posA.x, posA.y, 0.0f);
+        indexCount++;
+
+        // https://gamedev.stackexchange.com/questions/187972/how-to-update-indices-for-dynamic-mesh-in-opengl
+        // 对dynamic indeice buffer 的改进，chenor 偷懒了，这B天天偷懒，害的我要动脑子。
+        m_IndeiceBufer->Bind();
+        void* vbo = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
+        memcpy(vbo, indice, indexCount*6*sizeof(unsigned int));
+        glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+
+
         m_VertexBuffer->Bind();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(position), position);
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, vertexs.size() * sizeof(Vertex), vertexs.data()));
 
     }
     void TestDynamicBuffer::OnRender()
@@ -96,7 +113,6 @@ namespace tests
             int sample[] = { 0,1 };
             m_Shader->SetUniformi1iv("ourTexture", 2, sample);
 
-
             render.Draw(*m_VertexArray, *m_IndeiceBufer, *m_Shader);
         }
 
@@ -105,7 +121,6 @@ namespace tests
     {
         ImGuiIO& io = ImGui::GetIO();
         ImGui::DragFloat2("translation A", &posA.x,0.1f);
-        ImGui::DragFloat2("translation B", &posB.x, 0.1f);
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     }
 

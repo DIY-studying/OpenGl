@@ -7,7 +7,7 @@
 #include "Shader.h"
 #include "Render.h"
 #include "Texture.h"
-
+#include <array>
 namespace tests
 {
 	struct Vec2
@@ -30,6 +30,9 @@ namespace tests
 		virtual void OnRender();
 		virtual void OnImGuiRender();
 	private:
+		static const size_t MaxQuadCount = 20;
+
+
 		std::unique_ptr<Shader> m_Shader;
 		std::unique_ptr<VertexBuffer> m_VertexBuffer;
 		std::unique_ptr<VertexArray> m_VertexArray;
@@ -38,5 +41,6 @@ namespace tests
 		std::unique_ptr<Texture> m_TextureB;
 
 		Vec2 posA, posB;
+		
 	};
 }

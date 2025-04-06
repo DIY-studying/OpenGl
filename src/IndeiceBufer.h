@@ -9,8 +9,10 @@ private:
 
 public:
 	IndeiceBufer(const void* data,unsigned int count);
-	~IndeiceBufer();
+	IndeiceBufer(const void* data, unsigned int count, unsigned int usage);
 
+	~IndeiceBufer();
+	
 	void Bind() const;
 	void UnBind() const;
 	int GetCount() const;
